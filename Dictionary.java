@@ -1,4 +1,4 @@
-package termproject;
+package TermProjectSP2016;
 
 /**
  * Term Project 2-4 Trees

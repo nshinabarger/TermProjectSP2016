@@ -1,11 +1,11 @@
-package termproject;
+package TermProjectSP2016;
 
 /**
  * Title:        Term Project 2-4 Trees
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:
- * @author
+ * @author Nathan Shinabarger and Christopher Brauns
  * @version 1.0
  */
 public class TwoFourTree

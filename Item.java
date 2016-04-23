@@ -1,4 +1,4 @@
-package termproject;
+package TermProjectSP2016;
 
 /**
  * Basic storage element for storing a key and data

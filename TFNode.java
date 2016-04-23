@@ -1,4 +1,4 @@
-package termproject;
+package TermProjectSP2016;
 
 /**
  * Basic storage element for the 2-4 Tree
