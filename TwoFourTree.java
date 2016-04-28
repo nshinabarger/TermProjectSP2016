@@ -5,7 +5,7 @@ package TermProjectSP2016;
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:
- * @author Nathan Shinabarger and Christopher Brauns
+ * @author Nathan Shinabarger and Christopher Daniel Brauns II
  * @version 1.0
  */
 public class TwoFourTree
