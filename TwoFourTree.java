@@ -1,10 +1,9 @@
 package TermProjectSP2016;
 
 /**
- * Title:        Term Project 2-4 Trees
- * Description:
- * Copyright:    Copyright (c) 2001
+ * Title: Term Project 2-4 Trees Description: Copyright: Copyright (c) 2001
  * Company:
+ *
  * @author Nathan Shinabarger and Christopher Daniel Brauns II
  * @version 1.0
  */
@@ -37,15 +36,30 @@ public class TwoFourTree
 
     /**
      * Searches dictionary to determine if key is present
+     *
      * @param key to be searched for
      * @return object corresponding to key; null if not found
      */
     public Object findElement(Object key) {
+        TFNode temp = this.treeRoot;
+        int index = this.findFirstGreaterThanOrEqual(temp, key);
+
+        while (temp.getChild(index) != null) {
+
+            if (treeComp.isEqual(temp.getItem(index).key(), key)) {
+                return temp.getItem(index).element();
+            } else {
+                temp = temp.getChild(index);
+                index = this.findFirstGreaterThanOrEqual(temp, key);
+            }
+
+        }
         return null;
     }
 
     /**
      * Inserts provided element into the Dictionary
+     *
      * @param key of object to be inserted
      * @param element to be inserted
      */
@@ -53,14 +67,53 @@ public class TwoFourTree
     }
 
     /**
-     * Searches dictionary to determine if key is present, then
-     * removes and returns corresponding object
+     * Searches dictionary to determine if key is present, then removes and
+     * returns corresponding object
+     *
      * @param key of data to be removed
      * @return object corresponding to key
      * @exception ElementNotFoundException if the key is not in dictionary
      */
     public Object removeElement(Object key) throws ElementNotFoundException {
         return null;
+    }
+
+    private int findFirstGreaterThanOrEqual(TFNode node, Object key) {
+
+        //Will break if a null pointer is passed
+        int i = 0;
+        while (treeComp.isLessThan(node.getItem(i).key(), key) && i < node.getNumItems()) {
+            i++;
+        }
+        return i;
+    }
+
+    private int whatChildisThis() {
+        return 0;
+    }
+
+    private void overflow() {
+
+    }
+
+    private void underflow() {
+
+    }
+
+    private void leftTransfer() {
+
+    }
+
+    private void rightTransfer() {
+
+    }
+
+    private void leftFusion() {
+
+    }
+
+    private void rightFusion() {
+
     }
 
     public static void main(String[] args) {
@@ -128,7 +181,6 @@ public class TwoFourTree
         myTree = new TwoFourTree(myComp);
         final int TEST_SIZE = 10000;
 
-
         for (int i = 0; i < TEST_SIZE; i++) {
             myTree.insertElement(new Integer(i), new Integer(i));
             //          myTree.printAllElements();
@@ -151,8 +203,7 @@ public class TwoFourTree
         int indent = 0;
         if (root() == null) {
             System.out.println("The tree is empty");
-        }
-        else {
+        } else {
             printTree(root(), indent);
         }
     }
@@ -210,8 +261,7 @@ public class TwoFourTree
                 if (start.getChild(childIndex) == null) {
                     System.out.println("Mixed null and non-null children");
                     printTFNode(start);
-                }
-                else {
+                } else {
                     if (start.getChild(childIndex).getParent() != start) {
                         System.out.println("Parent to child confusion");
                         printTFNode(start);
@@ -233,4 +283,5 @@ public class TwoFourTree
         }
 
     }
+
 }
