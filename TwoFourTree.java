@@ -107,12 +107,38 @@ public class TwoFourTree
         return i;
     }
 
-    private int whatChildisThis() {
+    private int whatChildisThis(TFNode node) {
         return 0;
     }
 
     private void overflow(TFNode node) {
         if (node.equals(treeRoot)) this.rootOverflow();
+        
+        else{
+            TFNode parent = node.getParent();
+            TFNode leftChild = new TFNode();
+            TFNode rightChild = new TFNode();
+
+            // Use WCIT to find where index insert
+            int index = this.whatChildisThis(node);
+            
+            int middle = (parent.getMaxItems()/2)+1;
+            parent.insertItem(index,node.getItem(middle)); //shifts data
+            
+            
+            // Note, this setup gets rid of old node, makes two new.
+            parent.setChild(index, leftChild);
+            parent.setChild(index+1, rightChild);
+            leftChild.setParent(parent);
+            rightChild.setParent(parent);
+
+            for (int i = 0; i < middle; i++){
+                leftChild.addItem(i, node.getItem(i));
+            }
+            for (int i = middle; i <= rightChild.getMaxItems(); i++){
+                rightChild.addItem(i-middle, node.getItem(i+1));
+            }
+        }
         
     }
     private void rootOverflow(){
