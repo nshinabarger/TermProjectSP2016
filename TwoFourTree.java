@@ -64,6 +64,25 @@ public class TwoFourTree
      * @param element to be inserted
      */
     public void insertElement(Object key, Object element) {
+        Item item = new Item(key, element);
+        if (this.treeRoot == null) {
+            this.setRoot(new TFNode());
+            this.treeRoot.setParent(null);
+            this.treeRoot.addItem(0, item);
+
+            //Account for the OVERFLOW case
+        } else {
+            TFNode node = this.treeRoot;
+            int index = this.findFirstGreaterThanOrEqual(node, key);
+
+            while (node.getChild(index) != null) {
+
+                    node = node.getChild(index);
+                    index = this.findFirstGreaterThanOrEqual(node, key);
+            }
+            node.addItem(index, item);
+            if (node.getNumItems() > node.getMaxItems()) this.overflow(node);
+        }
     }
 
     /**
@@ -92,8 +111,29 @@ public class TwoFourTree
         return 0;
     }
 
-    private void overflow() {
-
+    private void overflow(TFNode node) {
+        if (node.equals(treeRoot)) this.rootOverflow();
+        
+    }
+    private void rootOverflow(){
+        TFNode parent = new TFNode();
+        TFNode leftChild = new TFNode();
+        TFNode rightChild = new TFNode();
+        
+        int middle = (treeRoot.getMaxItems()/2)+1;
+        parent.addItem(0,treeRoot.getItem(middle));
+        this.setRoot(parent);
+        treeRoot.setChild(0, leftChild);
+        treeRoot.setChild(1, rightChild);
+        leftChild.setParent(treeRoot);
+        rightChild.setParent(treeRoot);
+        
+        for (int i = 0; i < middle; i++){
+            leftChild.addItem(i, treeRoot.getItem(i));
+        }
+        for (int i = middle; i <= rightChild.getMaxItems(); i++){
+            rightChild.addItem(i-middle, treeRoot.getItem(i+1));
+        }
     }
 
     private void underflow() {
