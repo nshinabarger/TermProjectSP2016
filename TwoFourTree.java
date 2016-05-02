@@ -46,11 +46,10 @@ public class TwoFourTree
 
         while (temp.getChild(index) != null) {
 
+            temp = temp.getChild(index);
+            index = this.findFirstGreaterThanOrEqual(temp, key);
             if (treeComp.isEqual(temp.getItem(index).key(), key)) {
                 return temp.getItem(index).element();
-            } else {
-                temp = temp.getChild(index);
-                index = this.findFirstGreaterThanOrEqual(temp, key);
             }
 
         }
@@ -295,6 +294,8 @@ public class TwoFourTree
 
         myTree.printAllElements();
         myTree.checkTree();
+
+        myTree.findElement(66);
         System.out.println("done");
 
         myTree = new TwoFourTree(myComp);
