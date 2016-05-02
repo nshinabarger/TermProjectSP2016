@@ -295,7 +295,8 @@ public class TwoFourTree
         myTree.printAllElements();
         myTree.checkTree();
 
-        myTree.findElement(66);
+        int test1 = (int)myTree.findElement(66);
+        int test2 = (int)myTree.findElement(1);
         System.out.println("done");
 
         myTree = new TwoFourTree(myComp);
