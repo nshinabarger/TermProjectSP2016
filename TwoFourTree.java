@@ -77,11 +77,13 @@ public class TwoFourTree
 
             while (node.getChild(index) != null) {
 
-                    node = node.getChild(index);
-                    index = this.findFirstGreaterThanOrEqual(node, key);
+                node = node.getChild(index);
+                index = this.findFirstGreaterThanOrEqual(node, key);
             }
-            node.addItem(index, item);
-            if (node.getNumItems() > node.getMaxItems()) this.overflow(node);
+            node.insertItem(index, item);
+            if (node.getNumItems() > node.getMaxItems()) {
+                this.overflow(node);
+            }
         }
     }
 
@@ -101,65 +103,99 @@ public class TwoFourTree
 
         //Will break if a null pointer is passed
         int i = 0;
-        while (treeComp.isLessThan(node.getItem(i).key(), key) && i < node.getNumItems()) {
-            i++;
+        while (i < node.getNumItems()) {
+            if (treeComp.isLessThan(node.getItem(i).key(), key)) {
+                i++;
+            } else {
+                return i;
+            }
         }
         return i;
     }
 
     private int whatChildisThis(TFNode node) {
-        return 0;
+        if (node == this.treeRoot) {
+            return -1;
+        }
+        TFNode parent = node.getParent();
+        for (int i = 0; i <= parent.getNumItems(); i++) {
+            if (parent.getChild(i) == node) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void overflow(TFNode node) {
-        if (node.equals(treeRoot)) this.rootOverflow();
-        
-        else{
+        if (node.equals(treeRoot)) {
+            this.rootOverflow();
+        } else {
             TFNode parent = node.getParent();
             TFNode leftChild = new TFNode();
             TFNode rightChild = new TFNode();
 
             // Use WCIT to find where index insert
             int index = this.whatChildisThis(node);
-            
-            int middle = (parent.getMaxItems()/2)+1;
-            parent.insertItem(index,node.getItem(middle)); //shifts data
-            
-            
+
+            int middle = (parent.getMaxItems() / 2) + 1;
+            parent.insertItem(index, node.getItem(middle)); //shifts data
+
             // Note, this setup gets rid of old node, makes two new.
             parent.setChild(index, leftChild);
-            parent.setChild(index+1, rightChild);
-            leftChild.setParent(parent);
-            rightChild.setParent(parent);
+            parent.setChild(index + 1, rightChild);
 
-            for (int i = 0; i < middle; i++){
+            for (int i = 0; i < middle; i++) {
                 leftChild.addItem(i, node.getItem(i));
             }
-            for (int i = middle; i <= rightChild.getMaxItems(); i++){
-                rightChild.addItem(i-middle, node.getItem(i+1));
+            for (int i = middle; i < rightChild.getMaxItems(); i++) {
+                rightChild.addItem(i - middle, node.getItem(i + 1));
+            }
+            for (int i = 0; i <= middle; i++) {
+                leftChild.setChild(i, node.getChild(i));
+            }
+            for (int i = middle; i <= node.getMaxItems(); i++) {
+                rightChild.setChild(i - middle, node.getChild(i));
+            }
+            leftChild.setParent(parent);
+            rightChild.setParent(parent);
+            if (parent.getNumItems() > parent.getMaxItems()) {
+                this.overflow(parent);
             }
         }
-        
+
     }
-    private void rootOverflow(){
+
+    private void rootOverflow() {
         TFNode parent = new TFNode();
         TFNode leftChild = new TFNode();
         TFNode rightChild = new TFNode();
-        
-        int middle = (treeRoot.getMaxItems()/2)+1;
-        parent.addItem(0,treeRoot.getItem(middle));
+
+        int middle = (treeRoot.getMaxItems() / 2) + 1;
+        parent.addItem(0, treeRoot.getItem(middle));
+        leftChild.setParent(parent);
+        rightChild.setParent(parent);
+
+        for (int i = 0; i < middle; i++) {
+            leftChild.addItem(i, treeRoot.getItem(i));
+        }
+        for (int i = middle; i < rightChild.getMaxItems(); i++) {
+            rightChild.addItem(i - middle, treeRoot.getItem(i + 1));
+        }
+        for (int i = 0; i <= middle; i++) {
+            leftChild.setChild(i, this.treeRoot.getChild(i));
+            if (leftChild.getChild(i) != null) {
+                leftChild.getChild(i).setParent(leftChild);
+            }
+        }
+        for (int i = middle + 1; i <= this.treeRoot.getMaxItems() + 1; i++) {
+            rightChild.setChild(i - (middle + 1), this.treeRoot.getChild(i));
+            if (rightChild.getChild(i - (middle + 1)) != null) {
+                rightChild.getChild(i - (middle + 1)).setParent(rightChild);
+            }
+        }
         this.setRoot(parent);
         treeRoot.setChild(0, leftChild);
         treeRoot.setChild(1, rightChild);
-        leftChild.setParent(treeRoot);
-        rightChild.setParent(treeRoot);
-        
-        for (int i = 0; i < middle; i++){
-            leftChild.addItem(i, treeRoot.getItem(i));
-        }
-        for (int i = middle; i <= rightChild.getMaxItems(); i++){
-            rightChild.addItem(i-middle, treeRoot.getItem(i+1));
-        }
     }
 
     private void underflow() {
@@ -188,25 +224,35 @@ public class TwoFourTree
 
         Integer myInt1 = new Integer(47);
         myTree.insertElement(myInt1, myInt1);
+        myTree.printTree(myTree.root(), 20);
+
         Integer myInt2 = new Integer(83);
         myTree.insertElement(myInt2, myInt2);
+        myTree.printTree(myTree.root(), 20);
+
         Integer myInt3 = new Integer(22);
         myTree.insertElement(myInt3, myInt3);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt4 = new Integer(16);
         myTree.insertElement(myInt4, myInt4);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt5 = new Integer(49);
         myTree.insertElement(myInt5, myInt5);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt6 = new Integer(100);
         myTree.insertElement(myInt6, myInt6);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt7 = new Integer(38);
         myTree.insertElement(myInt7, myInt7);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt8 = new Integer(3);
         myTree.insertElement(myInt8, myInt8);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt9 = new Integer(53);
         myTree.insertElement(myInt9, myInt9);
@@ -219,29 +265,36 @@ public class TwoFourTree
 
         Integer myInt12 = new Integer(23);
         myTree.insertElement(myInt12, myInt12);
+        //myTree.printTree(myTree.root(), 20);
 
         Integer myInt13 = new Integer(24);
         myTree.insertElement(myInt13, myInt13);
 
         Integer myInt14 = new Integer(88);
         myTree.insertElement(myInt14, myInt14);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt15 = new Integer(1);
         myTree.insertElement(myInt15, myInt15);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt16 = new Integer(97);
         myTree.insertElement(myInt16, myInt16);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt17 = new Integer(94);
         myTree.insertElement(myInt17, myInt17);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt18 = new Integer(35);
         myTree.insertElement(myInt18, myInt18);
+        myTree.printTree(myTree.root(), 20);
 
         Integer myInt19 = new Integer(51);
         myTree.insertElement(myInt19, myInt19);
 
         myTree.printAllElements();
+        myTree.checkTree();
         System.out.println("done");
 
         myTree = new TwoFourTree(myComp);
@@ -287,6 +340,7 @@ public class TwoFourTree
         for (int i = 0; i < numChildren; i++) {
             printTree(start.getChild(i), indent);
         }
+        System.out.println();
     }
 
     public void printTFNode(TFNode node) {
