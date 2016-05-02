@@ -43,17 +43,20 @@ public class TwoFourTree
     public Object findElement(Object key) {
         TFNode temp = this.treeRoot;
         int index = this.findFirstGreaterThanOrEqual(temp, key);
-
-        while (temp.getChild(index) != null) {
-
-            temp = temp.getChild(index);
-            index = this.findFirstGreaterThanOrEqual(temp, key);
-            if (treeComp.isEqual(temp.getItem(index).key(), key)) {
-                return temp.getItem(index).element();
-            }
-
+        if (treeComp.isEqual(temp.getItem(index).key(), key)) {
+            return temp.getItem(index).element();
+        } //        while (temp.getChild(index) != null) {
+        //
+        //            temp = temp.getChild(index);
+        //            index = this.findFirstGreaterThanOrEqual(temp, key);
+        //            if (treeComp.isEqual(temp.getItem(index).key(), key)) {
+        //                return temp.getItem(index).element();
+        //            }
+        //
+        //        }
+        else {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -95,6 +98,8 @@ public class TwoFourTree
      * @exception ElementNotFoundException if the key is not in dictionary
      */
     public Object removeElement(Object key) throws ElementNotFoundException {
+        TFNode temp = this.treeRoot;
+
         return null;
     }
 
@@ -197,23 +202,41 @@ public class TwoFourTree
         treeRoot.setChild(1, rightChild);
     }
 
-    private void underflow() {
+    private void underflow(TFNode node) {
+        int index = this.whatChildisThis(node);
+        //Nathan Shinabarger sucks!!!!!
+        if ((index != node.getMaxItems() - 1) && (node.getParent().getChild(index + 1).getNumItems() > 1)) {
+            this.leftTransfer(node);
+        }
+        if ((index != 0) && (node.getParent().getChild(index - 1).getNumItems() + 1 > 1)) {
+            this.rightTransfer(node);
+        }
+        if ((index != node.getMaxItems() - 1) && (node.getParent().getChild(index+1).getNumItems() == 1)){
+            this.leftFusion(node);
+        }
+        if ((index != 0) && (node.getParent().getChild(index-1).getNumItems() == 1)){
+            this.rightFusion(node);
+        }
+    }
+
+    private void leftTransfer(TFNode node) {
+        int index = this.whatChildisThis(node);
+        TFNode parent = node.getParent();
+        Item temp = parent.getChild(index).getItem(0);
+        parent.insertItem(index, temp);
+        parent.getChild(index).removeItem(0);
+        node.insertItem(0, parent.removeItem(index));
+    }
+
+    private void rightTransfer(TFNode node) {
 
     }
 
-    private void leftTransfer() {
+    private void leftFusion(TFNode node) {
 
     }
 
-    private void rightTransfer() {
-
-    }
-
-    private void leftFusion() {
-
-    }
-
-    private void rightFusion() {
+    private void rightFusion(TFNode node) {
 
     }
 
@@ -295,8 +318,8 @@ public class TwoFourTree
         myTree.printAllElements();
         myTree.checkTree();
 
-        int test1 = (int)myTree.findElement(66);
-        int test2 = (int)myTree.findElement(1);
+        int test1 = (int) myTree.findElement(66);
+        int test2 = (int) myTree.findElement(1);
         System.out.println("done");
 
         myTree = new TwoFourTree(myComp);
