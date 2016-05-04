@@ -240,7 +240,8 @@ public class TwoFourTree
     private void rightTransfer(TFNode node) {
         int index = this.whatChildisThis(node);
         TFNode parent = node.getParent();
-        Item temp = parent.getChild(index + 1).removeItem(0);
+        TFNode sibling = node.getChild(index + 1);
+        Item temp = sibling.removeItem(0);
         parent.insertItem(index + 1, temp);
         //parent.getChild(index).removeItem(0);
         //May or may not need
@@ -250,6 +251,14 @@ public class TwoFourTree
     }
 
     private void leftTransfer(TFNode node) {
+        int index = this.whatChildisThis(node);
+        TFNode parent = node.getParent();
+        TFNode sibling = parent.getChild(index - 1);
+        Item temp = sibling.removeItem(sibling.getNumItems() - 1);
+        parent.insertItem(index - 1, temp);
+        
+        parent.setChild(index - 1, node);
+        node.insertItem(0, parent.removeItem(index));
 
     }
 
