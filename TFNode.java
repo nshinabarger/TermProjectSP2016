@@ -135,7 +135,7 @@ public class TFNode {
 
     public TFNode getChild(int index) {
         if ((index < 0) || (index > (MAX_ITEMS + 1))) {
-            throw new TFNodeException();
+            throw new TFNodeException("index: " + index);
         }
         return nodeChildren[index];
     }
