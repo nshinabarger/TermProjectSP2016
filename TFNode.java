@@ -57,8 +57,10 @@ public class TFNode {
         if ((index < 0) || (index > numItems) || (index > MAX_ITEMS)) {
             throw new TFNodeException();
         }
+        //used to not include if statement. BAD CODE DR. G!!!!!!!!
+        if (nodeItems[index] == null) numItems++;
         nodeItems[index] = data;
-        numItems++;
+
     }
     // this function inserts an item into the node, and adjusts into child
     // pointers to add the proper corresponding pointer
