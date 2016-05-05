@@ -104,27 +104,35 @@ public class TwoFourTree
      * @exception ElementNotFoundException if the key is not in dictionary
      */
     public Object removeElement(Object key) throws ElementNotFoundException {
+        Item holder = new Item();
         TFNode top = this.find(key);
-        TFNode bottom = top;
-        TFNode swap = top;
-        int index = this.findFirstGreaterThanOrEqual(bottom, key);
-        int topIndex = index;
-        while (bottom.getChild(index) != null) {
-            bottom = bottom.getChild(index);
-            index = this.findFirstGreaterThanOrEqual(bottom, key);
-        }
-        Item holder = top.getItem(topIndex);
-        if (bottom == top) {
+        TFNode bottom = new TFNode();
+        
+        int topIndex = this.findFirstGreaterThanOrEqual(top, key);
+        if (top.getChild(topIndex) == null) {
+            holder = top.removeItem(topIndex);
+            bottom = top;
+        } 
+//        if (treeComp.isEqual(top.getItem(topIndex).key(), key)){
+//            holder = top.removeItem(topIndex);
+//            bottom = top;
+//        } 
+        //TFNode bottom = top;
+//        bottom = this.inorderSuccessor(top, key);
+//        int index = this.findFirstGreaterThanOrEqual(bottom, key);
+//        if (bottom == top) {
+//            return top.removeItem(index);
+//        }
+        //TFNode swap = top;
+
+//        while (bottom.getChild(index) != null) {
+//            bottom = bottom.getChild(index);
+//            index = this.findFirstGreaterThanOrEqual(bottom, key);
+//        }
+//        Item holder = top.getItem(topIndex);
+        /*        if (bottom == top) {
             holder = top.removeItem(index);
-        } else {
-            //wap = swap.getChild(index + 1);
-//            index = this.findFirstGreaterThanOrEqual(swap, key);
-//            index = this.findFirstGreaterThanOrEqual(swap.getChild(index + 1), key);
-//            swap = swap.getChild(index + 1);
-//            while (swap.getChild(index) != null) {
-//                swap = swap.getChild(index);
-//                index = this.findFirstGreaterThanOrEqual(swap.getChild(index), key);
-//            }
+        }*/ else {
             bottom = this.inorderSuccessor(top, key);
             holder = top.getItem(topIndex);
             top.addItem(topIndex, bottom.getItem(0));
@@ -135,7 +143,7 @@ public class TwoFourTree
             underflow(bottom);
         }
 
-        return holder;
+        return holder.element();
     }
 
     private TFNode inorderSuccessor(TFNode top, Object key) {
@@ -201,9 +209,15 @@ public class TwoFourTree
             }
             for (int i = 0; i <= middle; i++) {
                 leftChild.setChild(i, node.getChild(i));
+                if (leftChild.getChild(i) != null) {
+                    leftChild.getChild(i).setParent(leftChild);
+                }
             }
-            for (int i = middle; i <= node.getMaxItems(); i++) {
-                rightChild.setChild(i - middle, node.getChild(i));
+            for (int i = middle + 1; i <= node.getMaxItems() + 1; i++) {
+                rightChild.setChild(i - (middle + 1), node.getChild(i));
+                if (rightChild.getChild(i - (middle + 1)) != null) {
+                    rightChild.getChild(i - (middle + 1)).setParent(rightChild);
+                }
             }
             leftChild.setParent(parent);
             rightChild.setParent(parent);
@@ -417,10 +431,13 @@ public class TwoFourTree
         myTree.insertElement(13, 13);
 
         myTree.printTree(myTree.treeRoot, 20);
-
         myTree.removeElement(11);
+        myTree.printTree(myTree.treeRoot, 20);
         myTree.removeElement(6);
+        myTree.printTree(myTree.treeRoot, 20);
         myTree.removeElement(7);
+        myTree.checkTree();
+        myTree.printTree(myTree.treeRoot, 20);
         myTree.removeElement(4);
         System.out.println("Tree After Remove:");
         myTree.checkTree();
@@ -441,14 +458,16 @@ public class TwoFourTree
 
         for (int i = 0; i < TEST_SIZE; i++) {
             System.out.println(i);
-            myTree.checkTree();
-            myTree.printTree(myTree.treeRoot, 20);
+            //myTree.checkTree();
+            // myTree.printTree(myTree.treeRoot, 20);
             myTree.insertElement(new Integer(i), new Integer(i));
             //          myTree.printAllElements();
             //         myTree.checkTree();
         }
+        myTree.checkTree();
         System.out.println("removing");
         for (int i = 0; i < TEST_SIZE; i++) {
+            System.out.println(i);
             int out = (Integer) myTree.removeElement(new Integer(i));
             if (out != i) {
                 throw new TwoFourTreeException("main: wrong element removed");
@@ -456,6 +475,7 @@ public class TwoFourTree
             if (i > TEST_SIZE - 15) {
                 myTree.printAllElements();
             }
+            myTree.checkTree();
         }
         System.out.println("done");
     }
